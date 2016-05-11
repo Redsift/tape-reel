@@ -12,7 +12,7 @@ Where you typically use Tape e.g.
 	
 Simply
 
-	var tape = require("tape-reel")("<div id='test'></div>");
+	var tape = require("@redsift/tape-reel")("<div id='test'></div>");
 
 The HTML sets the JSDOM for environment for each test invocation. This document is provided in the global scope for easy integration with browser Javascript components and passed as the second parameter to the function under test.
 
