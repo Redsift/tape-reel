@@ -1,4 +1,5 @@
 var tape = require("../")("<div id='test'></div>");
+var tape2 = require("../")(null);
 
 tape("test() has a document", function(t, document) {
     t.notEqual(document, undefined, 'JSDOM is undefined');
@@ -19,3 +20,8 @@ function _junk(t) {
 tape("test() skip works", { skip: true }, function(t, document) {
     _junk();
 });
+
+tape2('test() works without dom element', function(t, document){
+  t.equal('test', 'test');
+  t.end();
+})
