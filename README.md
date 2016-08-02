@@ -1,6 +1,8 @@
 # tape-reel
 
-[![Circle CI](https://circleci.com/gh/redsift/tape-reel.svg?style=svg)](https://circleci.com/gh/redsift/tape-reel)
+[![Circle CI](https://img.shields.io/circleci/project/redsift/tape-reel.svg?style=flat-square)](https://circleci.com/gh/redsift/tape-reel)
+[![npm](https://img.shields.io/npm/v/@redsift/tape-reel.svg?style=flat-square)](https://www.npmjs.com/package/@redsift/tape-reel)
+[![MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://raw.githubusercontent.com/redsift/tape-reel/master/LICENSE)
 
 Simple [tape](https://github.com/substack/tape) wrapper to better integrate server side JSDOM testing and CircleCI.
 
