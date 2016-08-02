@@ -1,17 +1,26 @@
-var tape = require("tape"),
+var xunit = require("tap-xunit"),
     jsdom = require("jsdom"),
     html = require("html"),
-    xunit = require("tap-xunit"),
     pretty = require("tap-diff"),
     fs = require("fs");
         
-function _setupReporting() {
+function _setupReporting(tape, name) {
+    // var _name = name || 'junit';
+    var _name = 'junit';
+    
     if (process.env.CIRCLE_TEST_REPORTS) {
         // Pretty errors on CircleCI
         var path = process.env.CIRCLE_TEST_REPORTS + '/junit';
-        fs.mkdirSync(path);
-        var wstream = fs.createWriteStream(path + '/junit.xml');
-        tape.createStream().pipe(xunit({})).pipe(wstream);
+        try {
+            fs.mkdirSync(path);
+        } catch (e) {
+            if (e.code !== 'EEXIST') throw e;
+            // ignore, just use the path
+        }
+
+    
+        var wstream = fs.createWriteStream(path + '/' + _name + '.xml');
+        tape.createStream().pipe(xunit({ package: name || ''})).pipe(wstream);
     } else {
         // Pretty errors on Console
         tape.createStream().pipe(pretty({})).pipe(process.stdout);
@@ -22,7 +31,7 @@ function _dumpJSDOM(document) {
     return html.prettyPrint(jsdom.serializeDocument(document), {indent_size: 2});
 }
 
-function _reel(pre, post) {
+function _reel(tape, pre, post) {
 
   function testCase(test, name, options, cb) {
     var opts = {};
@@ -50,7 +59,7 @@ function _reel(pre, post) {
         }
     });
   }
-
+  
   var _t = testCase.bind(null, tape);
   _t.only = testCase.bind(null, tape.only);
   _t.ignore = function () {};
@@ -59,16 +68,27 @@ function _reel(pre, post) {
   return _t;
 }
 
-_setupReporting();
+module.exports = function reel(body, supressDOM, name) {
+    // Hack to ensure multiple loads of the tape dependency do not end up 
+    // causing tests to get appended across instances
+    delete require.cache[require.resolve("tape")];
+    
+    var tape = tape = require("tape");
+  
+    _setupReporting(tape, name);
 
-module.exports = function reel(body, supressDOM) {
     function pre() {
-        var document = global.document = jsdom.jsdom(body);
-        
+        var document = null;
+        if (body != null) {
+            document = jsdom.jsdom(body);
+            global.document = document;
+        }
         return document;
     }
 
     function post(t, document) {
+        if (document == null) return;
+        
         delete global.document;
         
         if (t._ok || process.env.CI || supressDOM) return;
@@ -76,5 +96,5 @@ module.exports = function reel(body, supressDOM) {
         console.log(_dumpJSDOM(document));
     }
     
-    return _reel(pre, post);
+    return _reel(tape, pre, post);
 }

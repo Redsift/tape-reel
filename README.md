@@ -8,18 +8,32 @@ Simple [tape](https://github.com/substack/tape) wrapper to better integrate serv
 
 Where you typically use Tape e.g.
 
-	var tape = require("tape");
-	
+    var tape = require("tape");
+
 Simply
 
-	var tape = require("@redsift/tape-reel")("<div id='test'></div>");
+    var tape = require("@redsift/tape-reel")("<div id='test'></div>");
 
-The HTML sets the JSDOM for environment for each test invocation. This document is provided in the global scope for easy integration with browser Javascript components and passed as the second parameter to the function under test.
+The HTML sets the JSDOM for environment for each test invocation. This document is provided in the global scope for easy integration with browser JavaScript components and passed as the second parameter to the function under test.
 
 ## Features
 
 Compared to a naked Tape setup, this wrapper provides the following pre-configurations:
 
 1. Setup and teardown a fresh JSDOM for each test.
-2. When run on CircleCI, produce a JUnit.xml comptabile output in `$CIRCLE_TEST_REPORTS/junit/junit.xml`.
-3. When not run on CircleCI, pretty print with tap-diff and dump the DOM for failing tests. You may manually get a string representation of the DOM using `tape.dumpJSDOM(document)`.
+1. When run on CircleCI, produce a JUnit.xml compatible output in `$CIRCLE_TEST_REPORTS/junit/junit.xml`.
+1. When not run on CircleCI, pretty print with tap-diff and dump the DOM for failing tests. You may manually get a string representation of the DOM using `tape.dumpJSDOM(document)`.
+
+## Options
+
+    var tape = require("@redsift/tape-reel")(JSDOM-HTML, SUPRESS-DOM, REPORT-NAME);
+
+Parameter|Purpose|Default
+---------|-------|-------
+`JSDOM-HTML`|May be null if no JSDOM environment is required|`null`
+`SUPRESS-DOM`|By default, a failing test will dump the state of the DOM|`false`
+`REPORT-NAME`|Names the test report when generating `junit.xml` files on CircleCI|`junit`
+
+## Known Issues
+
+Currently, `REPORT-NAME` does not produce multiple junit.xml files due to a bug in the imported `tap-xunit` module.
