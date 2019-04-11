@@ -20,15 +20,15 @@
     "url": "https://github.com/redsift/tape-reel"
   },
   "scripts": {
-    "pretest": "npm outdated",
+    "pretest": "npm outdated || true",
     "testci": "CTMP=`mktemp -d` && CIRCLE_TEST_REPORTS=$CTMP tape 'test/**/*-test.js' && echo Reports generated in $CTMP/junit && ls -l $CTMP/junit",
     "test": "tape 'test/**/*-test.js' && eslint index.js"
   },
   "dependencies": {
-    "tape": "~4.6.0",
+    "tape": "~4.10.1",
     "jsdom": "~9.4.0",
-    "html": "~0.0.10",
-    "tap-xunit": "~1.4.0",   
+    "html": "~1.0.0",
+    "tap-xunit": "~2.3.0",
     "tap-diff": "~0.1.1"
   },
   "devDependencies": {
