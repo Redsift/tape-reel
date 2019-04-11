@@ -1,7 +1,10 @@
 version: 2
+
 jobs:
   build:
-    docker: circeci/node:8.12.0
+    shell: /bin/bash
+    docker:
+      - image: circleci/node:8.12.0
     steps:
       - checkout
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
